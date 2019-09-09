@@ -2,26 +2,29 @@
 
 // YOU KNOW WHAT TO DO //
 
-/**
- * each: Designed to loop over a collection, Array or Object, and applies the 
- * action Function to each value in the collection.
- * 
- * @param {Array or Object} collection: The collection over which to iterate.
- * @param {Function} action: The function to be applied to each value in the 
- * collection
- */
-function each(collection, action) {
-    if(Array.isArray(collection)) {
-        for(var i = 0; i < collection.length; i++) {
-            action(collection[i], i, collection);
-        }
-    } else {
-        for (var key in collection) {
-            action(collection[key], key, collection);
-        }
-    }
-}
-module.exports.each = each;
+// /**
+//  * each: Designed to loop over a collection, Array or Object, and applies the 
+//  * action Function to each value in the collection.
+//  * 
+//  * @param {Array or Object} collection: The collection over which to iterate.
+//  * @param {Function} action: The function to be applied to each value in the 
+//  * collection
+//  * 
+//  * 
+//  * 
+//  */
+// function each(collection, action) {
+//     if(Array.isArray(collection)) {
+//         for(var i = 0; i < collection.length; i++) {
+//             action(collection[i], i, collection);
+//         }
+//     } else {
+//         for (var key in collection) {
+//             action(collection[key], key, collection);
+//         }
+//     }
+// }
+// module.exports.each = each;
 
 
 
@@ -33,6 +36,11 @@ module.exports.each = each;
  * 
  * @param {any Value} value: The value to be returned
  * @return {any Datatype} value: value returned unchanged
+ * 
+ * Usage:
+ * 
+ *      let myVal = "Joanna"
+ *      identity("Joanna"); // returns "Joanna"
  * 
  */
  
@@ -52,16 +60,25 @@ module.exports.identity = identity;
  * 
  * @param {Any datatype} Value: Value whose type we're determining
  * @return {String}: Datatype of the value
+ * 
+ * Usage:
+ *      
+ *      let kateObj = {
+            id: 1,
+            name: "Kate",
+            age: "45"
+        }
+ *      typeOf(kateObj); // "object"
+ * 
  */
  
-// takes any value and returns the type of the value
-// uses if else chain
-
 function typeOf(value) {
     if (Array.isArray(value)) {
         return "array";
     } else if (value === null) {
         return "null";
+    } else if (value instanceof Date) {
+            return "Date";
     } else {
         return typeof value;
     }
@@ -89,10 +106,16 @@ module.exports.typeOf = typeOf;
  * @return {Array} Array argument input: Return whole <array> input if <number> is greater than the length of the array.
  * 
  * 
+ * Usage:
+ * 
+ *      let myArr = [1,2,3,4,5];
+ *      first(myArr, 3);    // [1,2,3]
+ *      first(myArr, -4);   // []
+ *      first(myArr);       // [1]
+ * 
  */
  
 
-// Takes an array and a number 
 function first(array, number) {
     // create variable (empty array) to push array elements
     var newArray = [];
@@ -142,6 +165,13 @@ module.exports.first = first;
  * @return {Array} Whole array argument: Returned if <number> is greater than <array> length
  * and is less than length of array
  * 
+ * Usage:
+ * 
+ *      let myArr = [1,2,3,4,5];
+ *      last(myArr, 3);    // [3,4,5]
+ *      last(myArr, -4);   // []
+ *      last(myArr);       // [5]
+ * 
  */
  
  function last(array, number){
@@ -190,6 +220,12 @@ module.exports.last = last;
  * 
  * @return {Number} Index: First array index where <value> is found.
  * @return {Number} -1: Returned if <value> is not found within array.
+ * 
+ * Usage:  
+ *      let myArr = [1,2,3,4,5];
+ *      indexOf(myArr, "some string");  // -1
+ *      indexOf(myArr, 4);              // 3
+ * 
  */
  
 function indexOf(array, value) {
@@ -200,7 +236,9 @@ function indexOf(array, value) {
     if (array[i] === value) {
         return i;
     }
-  } return -1;
+  } 
+  // if value is not found, loop exits without doing anything and -1 is returned
+  return -1;
 } 
 
 module.exports.indexOf = indexOf;
@@ -221,14 +259,29 @@ module.exports.indexOf = indexOf;
  * 
  * @return {Boolean} True: Returned if <array> contains <value>.
  * @return {Boolean} False: Returned if <array> does not contain <value>.
+ * 
+ * Usage:
+ *      
+ *      let myArr = [true, "hey", "test", 5];
+ *      contains(myArr, true);  // true
+ *      contains(myArr, "hey"); // true
+ *      contains(myArr, 14);    // false    
+ * 
  */
 
-// takes an array and a value as parameters
-// (condition) ? value_if_true : value_if false;
 function contains(array, value) {
+    // create result variable set to 0
+    let result = 0;
+    // loop through array
+    for (let i = 0; i < array.length; i++) {
+        // if value is found in array, change result to 1
+        array[i] === value ? result++ : result;
+    }
     // return evaluation of ternary operator 
-    return (array.includes(value) ? true : false);
+    // if result > 0, return true
+    return result > 0 ? true : false;
 }
+
 module.exports.contains = contains;
 
 
@@ -250,6 +303,19 @@ module.exports.contains = contains;
  * @param {Function} Function: The <action> to perform on the array or object (<collection>).
  * 
  * @return no return value
+ * 
+ * Usage:
+ *      
+ *      let myArr = [1,2,3,4,5]
+ *      each(myArr, function(element, index, collection) {
+            return element                      
+        });                 
+        // 1
+        // 2
+        // 3
+        // 4
+        // 5
+ * 
  */
  
  // takes collection and function as parameters
@@ -292,6 +358,11 @@ module.exports.each = each;
  * 
  * @return {Array} Array: a new array that contains only unique instances from inputted <array>
  * 
+ * Usage:
+ * 
+ *      let dupedArray = [1,1,1,2,2,2,3,3,3];
+ *      unique(dupedArray);     // [1,2,3]
+ * 
  */
  
  // takes an array
@@ -332,6 +403,18 @@ function unique(array) {
  * 
  * @return {Array} Array: an array of elements that returned true for the <test>. 
  * 
+ * Usage:
+ *      
+ *      let myArr = [1,2,3,4,5,6];
+ *      let isEven = function(number) {
+            return number % 2 === 0;
+        }
+        let isOdd = function(number) {
+            return number % 2 === 1;
+        }
+ *      filter(myArr, isEven); // [2,4,6]     
+ *      filter(myArr, isOdd); // [1,3,5]
+ * 
  */
  
  function filter(array, test) {
@@ -369,6 +452,18 @@ module.exports.filter = filter;
  * 
  * @return {Array} Array: Array that is a collection of elements that failed the input test
  * 
+ * Usage:
+ *  
+ *      let myArr = [1,2,3,4,5,6];
+ *      let isEven = function(number) {
+            return number % 2 === 0;
+        }
+        let isOdd = function(number) {
+            return number % 2 === 1;
+        }
+ *      reject(myArr, isEven); // [1,3,5]     
+ *      reject(myArr, isOdd); // [2,4,6]
+ * 
  */
 
  function reject(array, test) {
@@ -403,6 +498,15 @@ module.exports.filter = filter;
    * 
    * @return {Array} Array: an array that contains two arrays: one that is returned from the filter() call,
    * and one that is returned from the reject() call
+   * 
+   * Usage:
+   * 
+   *        let myArr = [1,2,3,4,5,6]
+   *        let isEven = function(number) {
+            return number % 2 === 0;
+            }
+            partition(myArr, isEven); // [[2,4,6],[1,3,5]]
+   * 
    */
    
 function partition(array, func) {
@@ -423,7 +527,6 @@ function partition(array, func) {
     reject(array, (element, index, collection) => {
         if (!func(element, index, collection)) {
             rejectArray.push(element);
-            console.log("rejectArray: " + rejectArray);
         }
     })
     // add new arrays to partition array and return partition array     
@@ -448,9 +551,17 @@ module.exports.partition = partition;
  * @param {Function} Function: a function to perform over the elements of a collection
  * 
  * @return {Array} Array: a new array with elements from input array modified by function
+ * 
+ * Usage:
+ *  
+ *      let myArr = [1,2,3,4,5]
+ *      map(myArr, function(item) {
+            return item * 2;
+        });                  
+        // [2,4,6,8,10]
+ * 
  */
  
- // takes a collection and a function
 function map(collection, func) {
     // create empty array to store returned values
     let newArr = [];
@@ -479,9 +590,30 @@ module.exports.map = map;
  * for each <array> object.
  * 
  * @param: {Array} Array: an array of objects to iterate through
- * @param: {String?} Property: a property to search for in each array object
+ * @param: {String} Property: a property to search for in each array object
  * 
  * @return: {Array} Array: an array containing the values of the given property in each object of the array
+ * 
+ * Usage:
+ * 
+ *      let myArr = [
+            {
+                id: 1,
+                name: 'Julie',
+                age: 14
+            },
+            {
+                id: 2,
+                name: 'JP',
+                age: 25
+            },
+            {
+                id: 3,
+                name: 'Ofer',
+                age: 31
+            }
+        ]
+        pluck(myArr, 'name');     // ['Julie','JP','Ofer']  
  */
  
  function pluck(array, property) {
@@ -491,7 +623,7 @@ module.exports.map = map;
         // return the result of calling function on the property of each element in the collection
        return element[property];
     });
-};
+}
 
 module.exports.pluck = pluck;
 
@@ -515,7 +647,18 @@ module.exports.pluck = pluck;
  * @param {Function} Function: a function/test to run on given collection elements
  * 
  * @param {Boolean} True: returned if there are no falsey elements in collection or no false returns from function
- * @param {BOolean} False: returned if there are any falsey elements in collection or false returns from function
+ * @param {Boolean} False: returned if there are any falsey elements in collection or false returns from function
+ * 
+ * Usage:
+ *      
+ *      myArr = [1,2,3,4,5,6];
+ *      every(myArr, function(number) {
+            return number % 2 === 0;
+        })                              // false
+        every(myArr, function(item) {
+            return typeof item === "number"
+        })                              // true
+ * 
  */
  
  function every(collection, funct) {
@@ -570,6 +713,17 @@ module.exports.every = every;
  * 
  * @param {Boolean} True: returned if there are any truthy elements in collection or any true returns from function
  * @param {BOolean} False: returned if there are no truthy elements in collection or no true returns from function
+ * 
+ * Usage:
+ *      
+ *      myArr = [1,2,3,4,5,6];
+ *      some(myArr, function(number) {
+            return number % 2 === 0;
+        })                              // true
+        some(myArr, function(item) {
+            return typeof item === "string"
+        })                              // false
+ * 
  */
 
 function some(collection, funct) {
@@ -586,7 +740,7 @@ function some(collection, funct) {
         each(collection, function(element, index, collection) {
             // if any element, index, or collection are truthy, change result to true
             if (element) {
-                result = true;
+                return true;
             }
         });
     }
@@ -615,7 +769,7 @@ module.exports.some = some;
 
 
 /**
- * reduce: iterates through an array with a function. if seed/previous value does not exist, use first index of array as seed 
+ * reduce: iterates through an array with a function. if seed is not provided, use first index of array as seed 
  * and continue to next element, using function with seed/previous value and next array element. use return value of function
  * as next seed/previous value.
  * 
@@ -630,6 +784,22 @@ module.exports.some = some;
  * @return {Any datatype} Previous: The result of running a function on a starting parameter, the first array element, 
  * then the next array element with the return result, etc.
  * 
+ * Usage:
+ * 
+ *      // using reduce to sum a total of numbers
+ *      let myArr = [1,2,3,4,5];
+ *      myArr.reduce(function(sum, number) {
+ *          return sum + number;
+ *      },0);
+ *      // 15
+ * 
+ *      // using reduce to flatten an array of subarrays
+ *      let myArr = [[1,2],[3,4],[5,6]]
+ *      myArr.reduce(function(flattenedArray, subarray) {
+            return flattenedArray.concat(subArray);
+        }, [])
+        // [1,2,3,4,5,6]
+        
  */
  
  
@@ -676,6 +846,22 @@ module.exports.reduce = reduce;
  * 
  * @return {Object} Object: an object with copies of all key-value pairs from all objects put into parameters
  * 
+ * Usage: 
+ * 
+ *      let obj1 = {
+            a: 1,
+            b: 'Angela'
+        };
+        let obj2 = {
+            c: 2,
+            d: 'Matt'
+        };
+        let obj3 = {
+            e: 3,
+            f: 'Ofer'
+        }
+        extend(obj1, obj2, obj); // { a: 1, b: 'Angela', c: 2, d: 'Matt', e: 3, f: 'Ofer' }
+ *
  */
 
 function extend(...objects) {
