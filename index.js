@@ -100,10 +100,10 @@ module.exports.typeOf = typeOf;
  * @param {Array} Array: The array to return values from
  * @param {Number} Number: The number of array elements to return
  
- * @return {Array} Empty Array: Empty array that is returned if <number> is negative or array argument input is not an array
- * @return {Array} New Array: A new array of elements containing the first <number> elements from input array argument  
- * @return {Any Datatype} First Element of Array: Return if <number> argument is not given or not a number.
- * @return {Array} Array argument input: Return whole <array> input if <number> is greater than the length of the array.
+ * @return {Array or first element (of any datatype)} : Returns new array of elements containing the first <number> elements from <array>. 
+ * Otherwise, returns empty array if <number> is negative or array argument input is not an array,
+ * returns first element of array if <number> argument is not given or is NaN, 
+ * or returns whole <array> if <number> is greater than or equal to the length of the array,
  * 
  * 
  * Usage:
@@ -159,11 +159,10 @@ module.exports.first = first;
  * @param {Array} Array to return elements from
  * @param {Number} Number of array elements to return
  * 
- * @return {Array} Empty array: Empty array that is returned if <number> is negative or <array> argument is not an array
- * @return {Array} New array: New array of <number> elements starting at end of <array> argument, returned if <number> exists 
- * @return {Any Datatype} Last element of array: Returned if <number> is not a number or not provided
- * @return {Array} Whole array argument: Returned if <number> is greater than <array> length
- * and is less than length of array
+ * @return {Array or last element (of any datatype)} : Returns new array of <number> elements starting
+ * at end of <array> argument. Otherwise, returns empty array if <number> is negative or <array> argument is not an array,
+ * returns last element of array if <number> is NaN or not provided, or returns whole <array> is <number> is greater than 
+ * or equal to array length.
  * 
  * Usage:
  * 
@@ -218,8 +217,7 @@ module.exports.last = last;
  * @param {Array} Array: The collection to check for <value>.
  * @param {Any Datatype} Value: The value to check for in <array>.
  * 
- * @return {Number} Index: First array index where <value> is found.
- * @return {Number} -1: Returned if <value> is not found within array.
+ * @return {Number} Index or -1: Returns first array index where <value> is found, -1 if <value> is not found in <array>.
  * 
  * Usage:  
  *      let myArr = [1,2,3,4,5];
@@ -257,8 +255,7 @@ module.exports.indexOf = indexOf;
  * @param {Array} Array: The collection to check for the <value>.
  * @param {Any datatype} Value: The value to check for in <array>.
  * 
- * @return {Boolean} True: Returned if <array> contains <value>.
- * @return {Boolean} False: Returned if <array> does not contain <value>.
+ * @return {Boolean} True or false: Returns true if <array> contains <value>, false otherwise.
  * 
  * Usage:
  *      
@@ -318,7 +315,6 @@ module.exports.contains = contains;
  * 
  */
  
- // takes collection and function as parameters
 function each(collection, action) {
     // if <collection> is array, use loop to call <function> on elements
     // function takes element, index, and collection as parameters
@@ -414,6 +410,8 @@ function unique(array) {
         }
  *      filter(myArr, isEven); // [2,4,6]     
  *      filter(myArr, isOdd); // [1,3,5]
+ * 
+ *      filter(myArray, (number) => number % 2 === 1);
  * 
  */
  
@@ -646,8 +644,8 @@ module.exports.pluck = pluck;
  * @param {Array or Object} Collection: a collection to iterate through with the given function
  * @param {Function} Function: a function/test to run on given collection elements
  * 
- * @param {Boolean} True: returned if there are no falsey elements in collection or no false returns from function
- * @param {Boolean} False: returned if there are any falsey elements in collection or false returns from function
+ * @return {Boolean} True or false: Returns true if there are no falsey elements in collection or no false returns from function,
+ * returns false if there are any falsey elements in collection or false returns from function
  * 
  * Usage:
  *      
@@ -711,8 +709,8 @@ module.exports.every = every;
  * @param {Array or Object} Collection: a collection to iterate through with the given function
  * @param {Function} Function: a function/test to run on given collection elements
  * 
- * @param {Boolean} True: returned if there are any truthy elements in collection or any true returns from function
- * @param {BOolean} False: returned if there are no truthy elements in collection or no true returns from function
+ * @return {Boolean} True or false: Returns true if there are any truthy elements in collection or any true returns from function,
+ * retursn false if there are no truthy elements in collection or no true returns from function
  * 
  * Usage:
  *      
@@ -806,23 +804,24 @@ module.exports.some = some;
  function reduce(array, funct, seed) {
     // call function for every element in collection with argument: (previous result, element, index)
     // loop through array, call funct on each element, previous result, and index
-    var previous = array[0];
     if (seed === undefined) {
-        seed = array[0];
+        let previous = array[0];
         for (let i = 1; i < array.length; i++) {
             previous = funct(previous, array[i], i);
+            return previous;
         } 
     } else {
+        let previous = array[0];
         for (let i = 0; i < array.length; i++) {
             if (i === 0) {
             previous = funct(seed, array[i], i);
             } else
             previous = funct(previous, array[i], i);
+            return previous;
         } 
     }
     // use return value of funct = previous result
     // after last iteration, return the return value of final function call
-    return previous;
 }
 
 module.exports.reduce = reduce;
